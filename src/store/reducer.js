@@ -1,4 +1,4 @@
-import { ADD_ITEM, DEL_ITEM } from './actionTypes.js'
+import { ADD_ITEM, DEL_ITEM, GET_LIST } from './actionTypes.js'
 
 
 
@@ -24,6 +24,12 @@ export default (state=defaultState,action)=>{
         let newState = JSON.parse(JSON.stringify(state));
         newState.list.splice(action.index,1);
         return newState
+    }
+    if(action.type === GET_LIST){
+        let newState = JSON.parse(JSON.stringify(state))
+        newState.list = action.data
+        return newState
+
     }
     return state
 }

@@ -1,9 +1,8 @@
 import React from "react";
-
 import { Input, List } from "antd"
 import store from './store'
-
-import {addItemAction,delItemAction} from './store/createAction.js'
+import {addItemAction,delItemAction, getListAction} from './store/createAction.js'
+import axios from 'axios'
 
 
 
@@ -40,6 +39,23 @@ class ToDoList extends React.Component {
                 />
             </div>
         </div >
+    }
+    // componentDidMount(){
+    //     this.getList()
+    // }
+    componentWillMount(){
+        this.getList()
+    }
+    // 从网络上获取数据，
+    getList=()=>{
+        axios.get("https://www.easy-mock.com/mock/5cfcce489dc7c36bd6da2c99/xiaojiejie/getList")
+        .then(res=>{
+            // console.log(res.data.data.list)
+            let data = res.data.data.list
+            const action = getListAction(data)
+            store.dispatch(action)
+
+        })
     }
     storeChange=()=>{
         this.setState(store.getState())
