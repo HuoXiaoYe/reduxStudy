@@ -1,13 +1,18 @@
 import React from "react";
 
 import { Input, List } from "antd"
-import store from './store/index.js'
+import store from './store'
+
+import {addItemAction,delItemAction} from './store/createAction.js'
+
+
+
 const { Search } = Input;
 class ToDoList extends React.Component {
     constructor(props) {
         super(props)
-        this.state = store.getState()
-        store.subscribe(this.storeChange) // 订阅,store中的数据发生改变，需要给state重新赋值
+       this.state = store.getState() // 将store中的值赋值给 state
+       store.subscribe(this.storeChange)
     }
     render() {
         let { inputValue, list } = this.state
@@ -21,7 +26,7 @@ class ToDoList extends React.Component {
                     onSearch={this.addItem}
                     ref="itemInfo"
                 />
-                {/* 点击按钮会触发 onSearch 事件*/}
+                {/* 点击按钮会触发 onSearch 事件 // onSearch={this.addItem}*/}
 
             </div>
             {/* todolist */}
@@ -31,32 +36,26 @@ class ToDoList extends React.Component {
                     size="small"
                     bordered
                     dataSource={list}
-                    renderItem={(item, index) => <List.Item onClick={this.delItem.bind(this, index)}>{item}</List.Item>}
+                    renderItem={(item,index) => <List.Item onClick={this.delItem.bind(this,index)}>{item}</List.Item>}
                 />
-
             </div>
         </div >
     }
-    delItem = (index) => {
-        let action = {
-            type: "delItem",
-            index
-        }
-        // console.log(index)
-        store.dispatch(action)
-    }
-    addItem = () => {
-        let val = this.refs.itemInfo.input.state.value;
-        let action = {
-            type : "addItem",
-            val
-        }
-        store.dispatch(action)
-        this.refs.itemInfo.input.state.value = ""
-    }    
-    storeChange = () => {
+    storeChange=()=>{
         this.setState(store.getState())
     }
+    addItem=()=>{
+        let data = this.refs.itemInfo.input.state.value
+        const action = addItemAction(data)
+        // console.log(action)
+        store.dispatch(action)
+        this.refs.itemInfo.input.state.value = ""
+    }
+    delItem=(index)=>{
+        const action = delItemAction(index)
+        store.dispatch(action)
+    }
+   
 }
 
 export default ToDoList

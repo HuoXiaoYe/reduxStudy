@@ -1,3 +1,6 @@
+import { ADD_ITEM, DEL_ITEM } from './actionTypes.js'
+
+
 
 const defaultState = {//默认数据
     inputValue : 'Write Something',
@@ -11,20 +14,17 @@ const defaultState = {//默认数据
     ]
 }
 
-export default (state = defaultState,action)=>{  //就是一个方法函数
-    if(action.type==="addItem"){
-
-    }
-    if(action.type==="delItem"){
+export default (state=defaultState,action)=>{
+    if(action.type === ADD_ITEM){
         let newState = JSON.parse(JSON.stringify(state));
-        newState.list.splice(action.index,1);
-        
+        newState.list.push(action.data);
         return newState
     }
-    if(action.type === "addItem"){
+    if(action.type === DEL_ITEM){
         let newState = JSON.parse(JSON.stringify(state));
-        newState.list.push(action.val);
+        newState.list.splice(action.index,1);
         return newState
     }
     return state
 }
+
