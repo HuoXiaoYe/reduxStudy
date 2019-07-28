@@ -1,77 +1,64 @@
-import React from "react";
-import { Input, List } from "antd"
-import store from './store'
-import {addItemAction,delItemAction, getListAction} from './store/createAction.js'
-import axios from 'axios'
+import React, { Component } from 'react';
+
+import { Input, Button, List } from 'antd'
+import store from './store/index.js'
+
+import { addItemAction, delItemAction, getData, getTodoList } from './store/actionCteater.js'
+// import axios from 'axios';
+
+// const data = [
+//     '早8点开晨会，分配今天的开发工作',
+//     '早9点和项目经理作开发需求讨论会',
+//     '晚5:30对今日代码进行review'
+// ]
 
 
 
-const { Search } = Input;
-class ToDoList extends React.Component {
+class TodoList extends Component {
     constructor(props) {
         super(props)
-       this.state = store.getState() // 将store中的值赋值给 state
-       store.subscribe(this.storeChange)
+        this.state = store.getState()
+        store.subscribe(this.storeChange)
     }
     render() {
-        let { inputValue, list } = this.state
-        return <div>
-            {/* add a todo list */}
-            <div style={{ width: "400px", margin: "20px" }}>
-                <Search
-                    placeholder={inputValue}
-                    enterButton="增加"
-                    size="large"
-                    onSearch={this.addItem}
-                    ref="itemInfo"
-                />
-                {/* 点击按钮会触发 onSearch 事件 // onSearch={this.addItem}*/}
-
+        return (
+            <div style={{ margin: '10px' }}>
+                <div>
+                    <Input ref="content" placeholder='write someting' style={{ width: '250px', marginRight: '10px' }} />
+                    <Button type="primary" onClick={this.addItem}>增加</Button>
+                </div>
+                <div style={{ margin: '10px', width: '300px' }}>
+                    <List
+                        bordered
+                        dataSource={this.state.list}
+                        renderItem={(item, index) => (<List.Item onClick={this.delItem.bind(this, index)}>{item}</List.Item>)}
+                    />
+                </div>
             </div>
-            {/* todolist */}
-            <div style={{ width: "400px", margin: "20px" }}>
-
-                <List
-                    size="small"
-                    bordered
-                    dataSource={list}
-                    renderItem={(item,index) => <List.Item onClick={this.delItem.bind(this,index)}>{item}</List.Item>}
-                />
-            </div>
-        </div >
+        );
     }
-    // componentDidMount(){
-    //     this.getList()
-    // }
-    componentWillMount(){
+    componentDidMount() {
         this.getList()
     }
-    // 从网络上获取数据，
-    getList=()=>{
-        axios.get("https://www.easy-mock.com/mock/5cfcce489dc7c36bd6da2c99/xiaojiejie/getList")
-        .then(res=>{
-            // console.log(res.data.data.list)
-            let data = res.data.data.list
-            const action = getListAction(data)
-            store.dispatch(action)
-
-        })
-    }
-    storeChange=()=>{
+    storeChange = () => {
         this.setState(store.getState())
     }
-    addItem=()=>{
-        let data = this.refs.itemInfo.input.state.value
-        const action = addItemAction(data)
-        // console.log(action)
+    addItem = () => {
+        let data = this.refs.content.state.value;
+        let action = addItemAction(data)
         store.dispatch(action)
-        this.refs.itemInfo.input.state.value = ""
+        this.refs.content.state.value = "";
     }
-    delItem=(index)=>{
-        const action = delItemAction(index)
+    delItem = (index) => {
+        const action = delItemAction(index);
         store.dispatch(action)
     }
-   
+    getList = () => {
+        // const action = getData()
+        // store.dispatch(action)
+        // 
+        const action = getTodoList()
+        store.dispatch(action)
+    }
 }
-
-export default ToDoList
+export default TodoList;

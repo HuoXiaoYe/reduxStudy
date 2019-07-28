@@ -1,36 +1,33 @@
-import { ADD_ITEM, DEL_ITEM, GET_LIST } from './actionTypes.js'
+import { ADD_ITEM, DEL_ITEM,GET_LIST } from './actionTypes'
 
-
-
-const defaultState = {//默认数据
-    inputValue : 'Write Something',
-    list:[
-        '早上4点起床，锻炼身体',
-        '中午下班游泳一小时',
-        '早上4点起床，锻炼身体',
-        '中午下班游泳一小时',
-        '早上4点起床，锻炼身体',
-        '中午下班游泳一小时'
+const defaultState = {
+    list: [
+        '早82点开晨会，分配今天的开发工作',
+        '早9点和项目经理作开发需求讨论会',
+        '晚5:30对今日代码进行review'
     ]
+
 }
 
-export default (state=defaultState,action)=>{
-    if(action.type === ADD_ITEM){
+export default (state = defaultState, action) => {
+    if (action.type === ADD_ITEM) {
         let newState = JSON.parse(JSON.stringify(state));
-        newState.list.push(action.data);
+        newState.list.push(action.data)
         return newState
     }
-    if(action.type === DEL_ITEM){
+
+    if (action.type === DEL_ITEM) {
         let newState = JSON.parse(JSON.stringify(state));
-        newState.list.splice(action.index,1);
+        newState.list.splice(action.index, 1)
         return newState
     }
-    if(action.type === GET_LIST){
-        let newState = JSON.parse(JSON.stringify(state))
+
+    if (action.type === GET_LIST) {
+        let newState = JSON.parse(JSON.stringify(state));
+        // newState.list.splice(action.index, 1)
         newState.list = action.data
         return newState
-
     }
+    
     return state
 }
-
